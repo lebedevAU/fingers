@@ -29,6 +29,7 @@ alphabet = {0: "А", 1: "Б", 2: "В", 3: "Г", 4: "Д", 5: "Е", 6: "Ж", 7: "�
             16: "С", 17: "Т", 18: "У", 19: "Ф", 20: "Х", 21: "Ц", 22: "Ч", 23: "Ш",
             24: "Ъ", 25: "Ы", 26: "Ь", 27: "Э", 28: "Ю", 29: "Я", 30: "spoke", 31: "Fuck you",}
 
+
 while (True):
 
     # Capture the video frame
@@ -52,7 +53,7 @@ while (True):
     results = hands.process(frame)
 
     ## синие шарики, если хотите:
-    
+
     # if result.multi_hand_landmarks:
     #         for id, lm in enumerate(result.multi_hand_landmarks[0].landmark):
     #                 #print(id, ":", lm)
@@ -64,7 +65,7 @@ while (True):
     #                 cvw.circle(frame, (cx, cy), 25, (0, 255, 0))
 
 
-    ## рисуем стиль по умолчанию
+    ## рисуем стиль по умолчанию - просто для красоты ;)
 
     if results.multi_hand_landmarks:
       for hand_landmarks in results.multi_hand_landmarks:
@@ -83,25 +84,31 @@ while (True):
 
     if results.multi_hand_landmarks:
         my_hand = results.multi_hand_landmarks[0]
-
+        coordList = []  # список координат (заносим по 3: x, y, z)
         for id, lms in enumerate(my_hand.landmark):
-            # print("CURRENT ID",id)
+            #print("CURRENT ID", id)
 
-            ## вариант для переходя в координаты на картинке (пиксели)
+            ## вариант для перехода в координаты на картинке (пиксели)
             #h, w, c = frame.shape
             #cx, cy = int(lms.x * w), int(lms.y * h)
-            
+
             cx, cy, cz = lms.x, lms.y, lms.z
-            print("x:",cx, "y:",cy, "z:", cz)
+            #print("x:",cx, "y:",cy, "z:", cz)
 
             ## заносим в лист 3 кооридинаты
             coordList.append(cx)
             coordList.append(cy)
             coordList.append(cz)
-        ## добавляем класс для нейронки
-        coordList.append(classLetter)
-        print(coordList)
- 
+            if id == 20:
+                ## добавляем класс для нейронки
+                coordList.append(classLetter)
+
+                # проверка 21+3(x,y,z) + classLetter = 64
+                #print("Len:", len(coordList))
+                #print("CURRENT ID:", id, "coordList:", coordList)
+
+                print(coordList)
+
     # Convert the BGR image to RGB before processing.
     results = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
